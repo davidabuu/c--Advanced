@@ -1,5 +1,6 @@
 ﻿using System.Data;
 using Dapper;
+using Helloworld.Data;
 using Helloworld.Models;
 using Microsoft.Data.SqlClient;
 
@@ -10,11 +11,9 @@ namespace Helloworld // Note: actual namespace depends on the project name.
     {
        public static void Main(string[] args)
         {
-            string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true";
-            IDbConnection dbConnection = new SqlConnection(connectionString);
+            DataContextDapper dapper = new DataContextDapper();
             string sqlCommand = "SELECT GETDATE()";
-            DateTime rightNow = dbConnection.QuerySingle<DateTime>(sqlCommand);
-            Console.WriteLine(rightNow);
+            DateTime rightNow = dapper.LoadDataSingle<DateTime>(sqlCommand);
             Computer myComputer = new Computer()
             {
                 Motherboard = "Z680",
@@ -24,8 +23,35 @@ namespace Helloworld // Note: actual namespace depends on the project name.
                 Price = 953.89m,
                 videoCard = "rr55"
             };
-            Console.WriteLine(myComputer.hasLTE);
+            string sql = @"INSERT INTO TutorialAppSchema.Computer (
+                 Motherboard,
+                hasWifi,
+                hasLTE,
+                ReleaseDate,
+                Price,
+                videoCard
+            ) VALUES ('" + myComputer.Motherboard  + "',' " + myComputer.hasWifi
+            + "',' " + myComputer.hasLTE
+            + "',' " + myComputer.ReleaseDate
+            + "',' " + myComputer.Price
+            + "',' " + myComputer.videoCard
+            + "')";
+            Console.WriteLine(sql);
+            bool result = dapper.ExecuteSql(sql);
+            Console.WriteLine(result);
+            Console.WriteLine(rightNow);
+            string sqlSelect = @"SELECT  Motherboard,
+                Computer.hasWifi,
+                Computer.hasLTE,
+                Computer.ReleaseDate,
+                Computer.Price,
+                Computer.videoCard FROM TutorialAppSchema.Computer";
+                 IEnumerable<Computer> computers = dapper.LoadData<Computer>(sqlSelect);
+                 foreach(Computer singleComputer in computers){
+                    Console.WriteLine(myComputer.hasWifi);
+                 }
         }
+       
         
     }
 }

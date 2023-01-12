@@ -9,6 +9,11 @@ namespace Helloworld.Models
         public DateTime ReleaseDate { get; set; }
         public decimal Price { get; set; }
         public string videoCard { get; set; } = "";
+        // string connectionString = "Server=localhost;Database=DotNetCourseDatabase;TrustServerCertificate=true;Trusted_Connection=true";
+            // IDbConnection dbConnection = new SqlConnection(connectionString);
+            // string sqlCommand = "SELECT GETDATE()";
+            // DateTime rightNow = dbConnection.QuerySingle<DateTime>(sqlCommand);
+            // Console.WriteLine(rightNow);
 
     }
 }
